@@ -1,0 +1,51 @@
+spring:
+  application:
+    name: guardrail-engine-java
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,prometheus"
+  endpoint:
+    health:
+      show-details: always
+
+# ==========================================
+# APPLICATION.YAML - Control Configuration
+# ==========================================
+# This file contains:
+# - Evaluator enable/disable flags
+# - External AI service enable/disable and credentials
+# - Actual pattern/keyword data is in config/policies.yaml
+# ==========================================
+guardrail:
+  evaluators:
+    profanity:
+      enabled: true
+      description: "Detects profanity/bad words in input"
+    hate-speech:
+      enabled: true
+      description: "Detects hate speech patterns in input"
+    pii:
+      enabled: true
+      description: "Detects personally identifiable information (PII) in input"
+    prompt-injection:
+      enabled: true
+      description: "Detects prompt injection attempts in input"
+    length:
+      enabled: true
+      description: "Validates input length against configured limits"
+
+  ai-moderation:
+    openai:
+      enabled: false
+      api-key: ${OPENAI_API_KEY:}
+      moderation-url: "https://api.openai.com/v1/moderations"
+    perspective:
+      enabled: false
+      api-key: ${PERSPECTIVE_API_KEY:}
+      moderation-url: "https://commentanalyzer.googleapis.com/v1alpha1/comments:analyzeComment"
