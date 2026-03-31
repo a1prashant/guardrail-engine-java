@@ -13,7 +13,7 @@ import java.util.List;
 public class LengthEvaluator implements Evaluator {
 
     @Override
-    public List<Violation> evaluate(String input, InputRulesPatterns rules) {
+    public List<Violation> doEvaluate(String input, InputRulesPatterns rules) {
         List<Violation> violations = new ArrayList<>();
         int maxLength = rules.getLimits().getMax_input_length();
 

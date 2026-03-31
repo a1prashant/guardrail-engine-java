@@ -38,15 +38,27 @@ public class InputRulesPatternLoader {
     }
 
     public InputRulesPatterns getRules() {
+        if (this.rules == null) {
+            throw new IllegalStateException("Guardrail rules are not loaded.");
+        }
         return this.rules;
     }
 
     private void validateRules(InputRulesPatterns rules) {
         Assert.notNull(rules, "Rules object cannot be null.");
         Assert.notNull(rules.getMetadata(), "Metadata cannot be null.");
-        if (rules.getLimits() != null) {
-            Assert.isTrue(rules.getLimits().getMax_input_length() > 0, "Max input length must be positive.");
-        }
-        log.debug("Basic rule validation passed.");
+        Assert.hasText(rules.getMetadata().getVersion(), "Metadata version cannot be blank.");
+
+        Assert.notEmpty(rules.getProfanity_list(), "profanity_list must not be empty.");
+        Assert.notEmpty(rules.getHate_speech_list(), "hate_speech_list must not be empty.");
+        Assert.notEmpty(rules.getPii_patterns(), "pii_patterns must not be empty.");
+        Assert.notEmpty(rules.getPrompt_injection_patterns(), "prompt_injection_patterns must not be empty.");
+
+        Assert.notNull(rules.getLimits(), "limits must not be null.");
+        Assert.isTrue(rules.getLimits().getMax_input_length() > 0, "max_input_length must be positive.");
+
+        log.debug("Rule validation passed: {} profanity, {} hate-speech, {} pii patterns, {} injection patterns.",
+                rules.getProfanity_list().size(), rules.getHate_speech_list().size(),
+                rules.getPii_patterns().size(), rules.getPrompt_injection_patterns().size());
     }
 }

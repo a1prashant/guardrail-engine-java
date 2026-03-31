@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Service layer for guardrail evaluation operations
@@ -63,14 +62,7 @@ public class GuardrailService {
             InputRulesPatterns rules = ruleLoader.getRules();
 
             List<Violation> allViolations = evaluators.parallelStream()
-                    .flatMap(evaluator -> {
-                        try {
-                            return evaluator.evaluate(content, rules).stream();
-                        } catch (Exception e) {
-                            log.error("Evaluator {} failed during execution.", evaluator.getClass().getSimpleName(), e);
-                            return Stream.empty();
-                        }
-                    })
+                    .flatMap(evaluator -> evaluator.evaluate(content, rules).stream())
                     .collect(Collectors.toList());
 
             if (!allViolations.isEmpty()) {

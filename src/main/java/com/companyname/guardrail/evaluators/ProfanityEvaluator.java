@@ -14,7 +14,7 @@ import java.util.List;
 public class ProfanityEvaluator implements Evaluator {
 
     @Override
-    public List<Violation> evaluate(String input, InputRulesPatterns rules) {
+    public List<Violation> doEvaluate(String input, InputRulesPatterns rules) {
         List<Violation> violations = new ArrayList<>();
         if (input == null || CollectionUtils.isEmpty(rules.getProfanity_list())) {
             return violations;
